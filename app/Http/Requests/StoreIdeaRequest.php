@@ -2,18 +2,16 @@
 
 namespace App\Http\Requests;
 
-use App\IdeaStatus;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class StoreIdeaRequest extends FormRequest
 {
     /**
+     * Determine if the user is authorized to make this request.
+     */
     public function authorize(): bool
     {
-        return true;
-    }
         return false;
     }
 
@@ -25,13 +23,7 @@ class StoreIdeaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string', 'min:10'],
-            'status' => ['sometimes', 'string', Rule::in(array_column(IdeaStatus::cases(), 'value'))],
-            'user_id' => ['sometimes', 'integer', 'exists:users,id'],
-            'image' => ['nullable', 'image', 'max:5120'],
-            'links' => ['sometimes', 'array', 'max:10'],
-            'links.*' => ['nullable', 'url', 'max:2048'],
+            //
         ];
     }
 }
