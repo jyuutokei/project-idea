@@ -19,7 +19,10 @@ class SessionsController extends Controller
 
         if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
             $seconds = RateLimiter::availableIn($throttleKey);
-            return back()->withErrors(['password' => 'Too may login attempts. Please try again in {$seconds} seconds.']);
+            return back()
+                ->withErrors(['password' => "Too may login attempts. Please try again in {$seconds} seconds."])
+                ->withInput($request->except('password'));
+
         }
 
         $validated = $request->validate([
