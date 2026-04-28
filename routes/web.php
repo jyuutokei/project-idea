@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn() => view('welcome'));
 
-Route::get('/register', [RegisteredUserController::class, 'create'])->middleware('guest');
+Route::get('/register', [RegisteredUserController::class, 'create'])->name('register')->middleware('guest');
 Route::post('/register', [RegisteredUserController::class, 'store'])->middleware('guest');
 
 Route::get('/login', [SessionsController::class, 'create'])->name('login')->middleware('guest');
