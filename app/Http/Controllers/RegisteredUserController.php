@@ -30,7 +30,7 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        // event(new Registered($user));
+        // event(new Registered($user)); for email verify support
         Auth::login($user);
         $request->session()->regenerate();
 
