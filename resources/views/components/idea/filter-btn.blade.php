@@ -1,0 +1,19 @@
+@props(['status' => 'pending', 'count' => 0])
+
+@php
+
+use Illuminate\Support\Str;
+
+$classes = 'btn';
+
+$classes .= match ($status) {
+'in_progress' => ' bg-blue-500/10 text-blue-500 border-blue-500/20',
+'completed' => ' bg-green-500/10 text-green-500 border-green-500/20',
+default => ' bg-yellow-500/10 text-yellow-500 border-yellow-500/20'
+};
+
+@endphp
+
+<a href="/ideas?status={{ $status }}" {{ $attributes->merge(['class' => $classes]) }}>
+    {{ Str::headline($status) }} <span class="text-sm">({{ $count }})</span>
+</a>
