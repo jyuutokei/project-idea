@@ -5,6 +5,24 @@
             <p class="text-muted-background text-sm mt-2">Capture your thoughts. Make a plan</p>
         </header>
 
+        <div x-data="{ open: false }" class="relative">
+            <button class="bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md"
+                @click="open = !open">
+                Filter
+            </button>
+
+            <div x-show="open" x-transition:enter="transition ease-out duration-300 origin-top-left"
+                x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+                x-transition:leave="transition ease-in duration-300 origin-top-left"
+                x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-90"
+                class="absolute left-0 ml-20 -mt-9">
+                @foreach (App\IdeaStatus::cases() as $status)
+                <x-idea.filter-btn status="{{ $status->value }}" count="{{ $statusCount[$status->value] ?? 0 }}" />
+                @endforeach
+                <a href="/ideas" class="btn bg-gray-500/10 text-gray-500 border-gray-500/20">No Filter</a>
+            </div>
+        </div>
+
         <div class="mt-10 text-muted-foreground">
             <div class="grid md:grid-cols-2 gap-6">
                 @forelse($ideas as $idea)
