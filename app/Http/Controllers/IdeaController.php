@@ -27,7 +27,7 @@ class IdeaController extends Controller
         $ideas = $user
             ->ideas()
             ->when($status, fn($query, $status) => $query->where('status', $status))
-            ->orderBy('created_at', 'desc')
+            ->latest()
             ->get();
 
         $statusCount = $user
@@ -55,7 +55,10 @@ class IdeaController extends Controller
      */
     public function store(StoreIdeaRequest $request)
     {
-        //
+        Auth::user()->ideas()->create($request->validated());
+
+        return to_route('idea.index')
+            ->with('success', 'Idea created successfully.');
     }
 
     /**
@@ -63,7 +66,13 @@ class IdeaController extends Controller
      */
     public function show(Idea $idea)
     {
-        //
+        if ($idea->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        return view("idea.show", [
+            'idea' => $idea
+        ]);
     }
 
     /**
@@ -87,6 +96,13 @@ class IdeaController extends Controller
      */
     public function destroy(Idea $idea)
     {
-        //
+        if ($idea->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $idea->delete();
+
+        return to_route('idea.index')
+            ->with('success', 'Idea deleted successfully.');
     }
 }
