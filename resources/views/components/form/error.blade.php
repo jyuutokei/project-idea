@@ -1,5 +1,5 @@
 @props(['name'])
 
 @error($name)
-<p class="error">{{ $message }}</p>
+<p id="{{ $name }}-error" class="error" role="alert">{{ $message }}</p>
 @enderror
