@@ -47,7 +47,8 @@
             </div>
         </div>
         <x-modal name="create-idea-modal" title="New Idea">
-            <form x-data="{ status: 'pending' }" action="{{ route('idea.store') }}" method="POST">
+            <form x-data="{ status: 'pending', newLink: '', links: [] }" action="{{ route('idea.store') }}"
+                method="POST">
                 @csrf
 
                 <div class="space-y-6">
@@ -71,8 +72,31 @@
                     <x-form.field label="Description" name="description" type="textarea"
                         placeholder="Describe your idea." />
 
+                    <div>
+                        <fieldset class="space-y-3">
+                            <legend class="label">Links</legend>
+
+                            <template x-for="(link, index) in links" :key="link">
+                                <div class="flex gap-x-2 items-center">
+                                    <input name="links[]" x-model="links[index]" class="input w-full">
+
+                                    <button type="button" @click="links.splice(index, 1)">
+                                        <x-icons.x />
+                                    </button>
+                                </div>
+                            </template>
+
+                            <div class="flex gap-x-2 items-center">
+                                <input x-model="newLink" type="url" id="new-link" autocomplete="url" spellcheck="false"
+                                    placeholder="https://example.com" class="input flex-1">
+                                <button type="button" @click="links.push(newLink.trim()); newLink = ''; "
+                                    :disabled="!newLink.trim()">+</button>
+                            </div>
+                        </fieldset>
+                    </div>
+
                     <div class="flex justify-end gap-x-5">
-                        <button type="button" class="btn btn-outlined" @click="show = false">Cancel</button>
+                        <button type="button" class="btn btn-outlined" @click="$dispatch('close-modal')">Cancel</button>
                         <button type="submit" class="btn">Create</button>
                     </div>
                 </div>
