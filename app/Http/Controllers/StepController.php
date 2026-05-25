@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Models\IdeaStep;
-use Illuminate\Http\Request;
 
 class StepController extends Controller
 {
@@ -15,6 +14,6 @@ class StepController extends Controller
 
         $step->update(['completed' => !$step->completed]);
 
-        return back();
+        return response()->json(['completed' => $step->completed]);
     }
 }
