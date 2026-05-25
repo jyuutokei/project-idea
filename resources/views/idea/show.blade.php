@@ -33,7 +33,7 @@
                 {{ $idea->status->label() }}
             </x-idea.status-label>
 
-            <p class="mt-5">{{ $idea->formattedDescription }}</p>
+            <p class="mt-5 prose prose-inverted">{!! $idea->formattedDescription !!}</p>
         </div>
 
         @if ($idea->steps->count())
