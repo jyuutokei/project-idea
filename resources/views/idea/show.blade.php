@@ -43,17 +43,14 @@
             <div class="mt-2 space-y-2">
                 @foreach ($idea->steps as $step)
                 <x-card class="text-primary font-medium flex gap-x-3 items-center">
-                    <form action="{{ route('step.update', $step) }}" method="POST">
-                        @csrf
-                        @method('PATCH')
-
-                        <div class="flex items-center gap-x-3">
-                            <button type="submit" role="checkbox"
-                                class="size-5 flex items-center justify-center rounded-lg text-primary-foreground {{ $step->completed ? 'bg-primary' : 'border border-primary' }}">&check;</button>
-                            <span
-                                class="{{ $step->completed ? 'line-through text-muted-foreground' : '' }}">{{ $step->description }}</span>
-                        </div>
-                    </form>
+                    <div class="flex items-center gap-x-3">
+                        <button role="checkbox" data-step-button data-step-id="{{ $step->id }}"
+                            data-step-state="{{ $step->completed ? '1' : '0' }}"
+                            aria-checked="{{ $step->completed ? 'true' : 'false' }}"
+                            class="size-5 flex items-center justify-center rounded-lg text-primary-foreground {{ $step->completed ? 'bg-primary' : 'border border-primary' }}">&check;</button>
+                        <span
+                            class="{{ $step->completed ? 'line-through text-muted-foreground' : '' }}">{{ $step->description }}</span>
+                    </div>
                 </x-card>
                 @endforeach
             </div>
