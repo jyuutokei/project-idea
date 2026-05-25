@@ -1,4 +1,4 @@
-@props(['label' => false, 'name', 'type' => 'text'])
+@props(['label' => false, 'name', 'type' => 'text', 'value' => ''])
 
 <div class="space-y-2">
     @if ($label)
@@ -7,10 +7,10 @@
 
     @if ($type === 'textarea')
     <textarea name="{{ $name }}" id="{{ $name }}"
-        {{ $attributes->merge(['class' => 'textarea']) }}>{{ old($name, '') }}</textarea>
+        {{ $attributes->merge(['class' => 'textarea']) }}>{{ old($name, $value) }}</textarea>
     @else
     <input type="{{ $type }}" class="input" id="{{ $name }}" name="{{ $name }}"
-        value="{{ $type !== 'password' ? old($name, '') : '' }}" {{ $attributes }}>
+        value="{{ $type !== 'password' ? old($name, $value) : '' }}" {{ $attributes }}>
     @endif
 
     <x-form.error name="{{ $name }}" />
