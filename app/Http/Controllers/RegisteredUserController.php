@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Models\User;
@@ -34,6 +36,6 @@ class RegisteredUserController extends Controller
         Auth::login($user);
         $request->session()->regenerate();
 
-        return redirect('/')->with('success', 'Registration complete!');
+        return to_route('idea.index')->with('success', 'Registration complete!');
     }
 }
