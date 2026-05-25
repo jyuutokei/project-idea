@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -40,7 +42,7 @@ class SessionsController extends Controller
 
         RateLimiter::clear($throttleKey);
         $request->session()->regenerate();
-        return redirect()->intended('/')->with('success', 'You are now logged in');
+        return redirect()->intended(route('idea.index'))->with('success', 'You are now logged in');
     }
 
     public function destroy(Request $request)
