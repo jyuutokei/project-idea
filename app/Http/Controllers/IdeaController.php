@@ -1,13 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
+use App\Actions\CreateIdea;
+use App\Actions\UpdateIdea;
 use App\IdeaStatus;
 use App\Models\Idea;
-use App\Http\Requests\StoreIdeaRequest;
-use App\Http\Requests\UpdateIdeaRequest;
+use App\Http\Requests\IdeaRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class IdeaController extends Controller
 {
@@ -43,19 +47,23 @@ class IdeaController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreIdeaRequest $request)
+    public function store(IdeaRequest $request, CreateIdea $actions)
     {
-        Auth::user()->ideas()->create($request->validated());
+        // $idea = Auth::user()->ideas()->create($request->safe()->except(['steps', 'image']));
+
+        // $idea->steps()->createMany(
+        //     collect($request->steps)->map(fn($step) => ['description' => $step])
+        // );
+
+        // $imagePath = $request->image->store('ideas', 'public');
+
+        // $idea->update([
+        //     'image_path' => $imagePath
+        // ]);
+
+        $actions->handle($request->safe()->all());
 
         return to_route('idea.index')
             ->with('success', 'Idea created successfully.');
@@ -66,9 +74,7 @@ class IdeaController extends Controller
      */
     public function show(Idea $idea)
     {
-        if ($idea->user_id !== Auth::id()) {
-            abort(403);
-        }
+        Gate::authorize('workWith', $idea);
 
         return view("idea.show", [
             'idea' => $idea
@@ -76,19 +82,15 @@ class IdeaController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Idea $idea)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateIdeaRequest $request, Idea $idea)
+    public function update(IdeaRequest $request, Idea $idea, UpdateIdea $action)
     {
-        //
+        Gate::authorize('workWith', $idea);
+
+        $action->handle($request->safe()->all(), $idea);
+
+        return back()->with('success', 'Idea updated');
     }
 
     /**
@@ -96,9 +98,7 @@ class IdeaController extends Controller
      */
     public function destroy(Idea $idea)
     {
-        if ($idea->user_id !== Auth::id()) {
-            abort(403);
-        }
+        Gate::authorize('workWith', $idea);
 
         $idea->delete();
 
