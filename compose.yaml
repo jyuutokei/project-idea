@@ -1,0 +1,43 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    ports:
+      - "${FRANKEN_PORT}:80"
+      - "${FRANKEN_PORT_HTTPS}:443"
+    networks:
+      - laravel-frontend
+      - laravel-backend
+    volumes:
+      - sqlite_data:/app/database
+      - storage_data:/app/storage
+    env_file:
+      - .env
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  redis:
+    image: redis:alpine
+    restart: unless-stopped
+    command: redis-server --save "" --appendonly no
+    networks:
+      - laravel-backend
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+networks:
+  laravel-frontend:
+    driver: bridge
+  laravel-backend:
+    driver: bridge
+    internal: true
+
+volumes:
+  sqlite_data:
+  storage_data:

@@ -1,0 +1,21 @@
+{
+    frankenphp
+
+    admin off
+
+    # auto_https off
+
+    order php_server before file_server
+}
+
+:80 {
+    root * /app/public
+
+    encode zstd br gzip
+
+    php_server {
+        resolve_root_symlink
+    }
+
+    file_server
+}
