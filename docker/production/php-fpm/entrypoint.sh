@@ -12,7 +12,7 @@ rm -rf /var/www/storage-init
 
 php artisan storage:link --force
 
-php artisan migrate --force
+php artisan migrate --no-interaction --force
 
 php artisan config:cache
 php artisan route:cache
